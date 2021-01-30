@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flight Booking</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Roboto:wght@400;500;700&display=swap"
+        rel="stylesheet">
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css" rel="stylesheet" />
+</head>
+
+<body>
+    <!--Header and Menu Section-->
+    <header class="container">
+        <nav>
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">About Us</a></li>
+                <li><a href="#">Contact</a></li>
+                <li><a class="active" href="#">Sign Up</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!--Booking Section-->
+    <main class="main-content container">
+        <div class="booking-form">
+            <h3>Booking Flights</h3>
+            <div class="input-group">
+                <label for="">Flying From</label>
+                <input class="inp-style" type="text" name="" placeholder="Dhaka, Bangladesh">
+            </div>
+            <div class="input-group">
+                <label for="">Flying To</label>
+                <input class="inp-style" type="text" name="" placeholder="New York, United States">
+            </div>
+            <div class="inputs">
+                <div class="input-group">
+                    <label" for="">Departure</label>
+                        <input class="inp-style" type="date" name="">
+                </div>
+                <div class="input-group">
+                    <label for="">Return</label>
+                    <input class="inp-style" type="date" name="">
+                </div>
+            </div>
+            <div class="input-group f-class">
+                <div>
+                    <label for="">First Class ($150)</label>
+                    <input id="first-class-count" class="inp-style inp-width form-control" type="number" name=""
+                        value="0">
+                </div>
+                <div class="plus-minus-btn">
+                    <button onclick="handleTicketChange('first-class',false);" class="btn btn-default"><i
+                            class="fas fa-minus"></i></button>
+                    <button onclick="handleTicketChange('first-class',true);" class="btn btn-default"><i
+                            class="fas fa-plus"></i></button>
+                </div>
+            </div>
+
+            <div class="input-group f-class">
+                <div>
+                    <label for="">Economy ($100)</label>
+                    <input id="economy-count" class="inp-style inp-width form-control" type="number" name="" value="0">
+                </div>
+                <div class="plus-minus-btn">
+                    <button onclick="handleTicketChange('economy',false);" class="btn btn-default"><i
+                            class="fas fa-minus"></i></button>
+                    <button onclick="handleTicketChange('economy',true);" class="btn btn-default"><i
+                            class="fas fa-plus"></i></button>
+                </div>
+            </div>
+            <div class="calculations">
+                <div class="amount">
+                    <div class="left">
+                        <p>Subtotal</p>
+                    </div>
+                    <div class="right">
+                        <p id="subtotal">$000</p>
+                    </div>
+                </div>
+
+                <div class="amount">
+                    <div class="left">
+                        <p>Charge 10% VAT</p>
+                    </div>
+                    <div class="right">
+                        <p id="vat">$00</p>
+                    </div>
+                </div>
+                <hr>
+                <div class="amount">
+                    <div class="left">
+                        <h4>Total</h4>
+                    </div>
+                    <div class="right">
+                        <p id="grand-total">$000</p>
+                    </div>
+                </div>
+            </div>
+            <button id="book-now" class="btn-style">Book Now</button>
+        </div>
+
+        <div class="booking-content">
+            <h1>discover <br> around the world</h1>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicingelit. Provident voluptatibus quam fuga laborumalias
+                veniam libero autem quasi maxime ullam vero nama imi dolor, architecto ab facilis eaque deserunt nobise
+                voluptatibus quam</p>
+            <div id="booking-output-report" class="booking-output">
+                <table id="report-output-table">
+                    <tr>
+                        <th>Class Name</th>
+                        <th>Class Amount</th>
+                        <th>Per Price</th>
+                        <th>Total Price</th>
+                        <th>Vat</th>
+                        <th>Grand Total</th>
+                    </tr>
+                    <tr>
+                        <td id="first-class-name"></td>
+                        <td id="first-class-amount"></td>
+                        <td id="first-class-price"></td>
+                        <td id="first-class-total"></td>
+                        <td rowspan="2" id="first-class-vat"></td>
+                        <td rowspan="2" id="first-class-grand-total"></td>
+                    </tr>
+                    <tr>
+                        <td id="economy-class-name"></td>
+                        <td id="economy-class-amount"></td>
+                        <td id="economy-class-price"></td>
+                        <td id="economy-class-total"></td>
+                    </tr>
+                </table>
+                <p id="thanks"></p>
+            </div>
+        </div>
+
+        <script>
+            // function for increase or decrease ticket amount            
+            function handleTicketChange(division, isIncrease) {
+                const classCount = getInputItem(division);
+                let classNewCount = classCount;
+                if (isIncrease == true) {
+                    classNewCount = classCount + 1;
+                }
+                if (isIncrease == false && classCount > 0) {
+                    classNewCount = classCount - 1;
+                }
+                document.getElementById(division + '-count').value = classNewCount;
+                calculateTotal();
+            }
+            //function for calculate cost
+            function calculateTotal() {
+                const firstClassTickets = getInputItem('first-class'); //getting first-class ticket amount by calling function
+                const economyTickets = getInputItem('economy');         //getting economy-class ticket amount by calling function
+                const subtotal = firstClassTickets * 150 + economyTickets * 100;  //calculation of total price; Note: first-class-ticket-price:$150 & economy:$100;
+                setAmount('subtotal', subtotal);  //set subtotal amount by using function
+
+                const vat = subtotal * 0.1;  //calculate 10% vat
+                setAmount('vat', vat);       // set vat amount by using function
+
+                const grandTotal = subtotal + vat;    //calculation of grand total
+                setAmount('grand-total', grandTotal); //set grand total amount by using function
+
+                return [firstClassTickets, economyTickets, subtotal, vat, grandTotal];
+            }
+            //function for getting ticket amount of classes
+            function getInputItem(division) {
+                const classInput = document.getElementById(division + '-count');
+                const classCount = parseInt(classInput.value); //converting amount to integer
+                return classCount;
+            }
+            //function for set amount
+            function setAmount(where, amount) {
+                document.getElementById(where).innerText = '$' + amount;
+            }
+
+            //bonus-round       
+            // displaying a report of purchasing ticket
+            document.getElementById('book-now').addEventListener('click', function () {
+                calculateTotal();
+                document.getElementById('booking-output-report').style.display = "block";
+                const [firstClass, economy, subtotal, vat, grandTotal] = calculateTotal();
+
+                if (grandTotal > 0) {
+                    document.getElementById('report-output-table').style.display = "block"
+                    document.getElementById('first-class-name').innerText = "First Class";
+                    document.getElementById('first-class-amount').innerText = firstClass;
+                    document.getElementById('first-class-price').innerText = '$' + 150;
+                    document.getElementById('first-class-total').innerText = '$' + firstClass * 150;
+                    document.getElementById('first-class-vat').innerText = '$' + vat;
+                    document.getElementById('first-class-grand-total').innerText = '$' + grandTotal;
+
+                    document.getElementById('economy-class-name').innerText = "Economy Class";
+                    document.getElementById('economy-class-amount').innerText = economy;
+                    document.getElementById('economy-class-price').innerText = '$' + 100;
+                    document.getElementById('economy-class-total').innerText = '$' + economy * 100;
+                    document.getElementById('thanks').innerText = "Thanks for purchasing."
+                }
+                if (grandTotal == 0) {
+                    document.getElementById('report-output-table').style.display = "none";
+                    document.getElementById('thanks').innerText = "You didn't select any ticket."
+                }
+            })
+        </script>
+        </section>
+
+        <!--Thank You-->
+</body>
+
+</html>
